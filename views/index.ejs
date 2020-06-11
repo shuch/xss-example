@@ -4,12 +4,72 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
+  <!-- scp -->
+  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' gist.github.com;style-src github.githubassets.com"> -->
+  <style>
+    /* body {
+      background-url: "javascript: alert(css script)";
+    } */
+  </style>
 </head>
 <body>
-  <h1><%= title %></h1>
-  <!-- 自动对<>尖括号字符转义 -->
+  <h2>反射型</h2>
+  <!-- 反射型 -->
+  <!-- <%= %>自动对<>尖括号字符转义 -->
   <div><%= xss %></div>
-  <!-- 不会对<>尖括号字符转义 -->
+  <!-- <%- %>不会对<>尖括号字符转义 -->
   <div><%- xss %></div>
+
+
+  <h2>存储型</h2>
+  <textarea name="name" rows="8" cols="80" id="text">哈<img src="" alt="" onerror="alert(1)"></textarea>
+  <!-- <p>sks <img src="null" onerror="alert(1)"></p> -->
+  <br>
+  <button type="button" name="button" id="btn">评论</button>
+  <button type="button" name="button" id="get">获取评论</button>
+  <h4>我的评论：</h4>
+  <div id="comment"></div>
+  <script>
+    var text = document.getElementById('text');
+    var btn = document.getElementById('btn');
+    var get = document.getElementById('get');
+    var cmt = document.getElementById('comment');
+
+    btn.addEventListener('click', () => {
+      var xhr = new XMLHttpRequest();
+      var url = '/setComment?comment=' + text.value;
+      xhr.onreadystatechange = () => {
+        console.log('readyState, status', xhr.readyState, xhr.status);
+        if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+          console.log('response', xhr.responseText);
+        }
+      }
+      xhr.open('GET', url, true);
+      xhr.send();
+    });
+
+    get.addEventListener('click', () => {
+      var xhr = new XMLHttpRequest();
+      var url = '/getComment';
+      xhr.open('GET', url);
+      xhr.send();
+      xhr.onreadystatechange = () => {
+        console.log('readyState, status', xhr.readyState, xhr.status);
+        if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+          console.log('JSON.parse(xhr.responseText).msg', JSON.parse(xhr.responseText).msg);
+          
+          cmt.innerHTML = JSON.parse(xhr.responseText).msg;
+        }
+      }
+    });
+    // read cookie
+    readCookie();
+
+    function readCookie() {
+      console.log('cookie', document.cookie);
+    }
+
+</script>
+<script src="https://gist.github.com/shuch/8659f0d01f1973c9d29b9abac97fbd02.js"></script>
 </body>
 </html>
