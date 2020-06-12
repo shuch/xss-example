@@ -26,4 +26,13 @@ XSS(Cross Site Script) 对用户的输入的恶意代码不进行校验，直接
 |"|\&quot;|
 |\n|\<br>|
 
+### 增加攻击难度
+* 设置响应头 httponly
+* 设置https 响应头 secure
+* 利用 content-security-policy
+    - default-src
+    - script-src
+    - style-src
+* 设置响应头 x-xss-protection
+
 
