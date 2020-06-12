@@ -12,6 +12,10 @@ app.get('/', (req, res) => {
   res.cookie('token', 'abcde', { 'httpOnly': true });
   res.cookie('name', 'shuch', { maxAge: 1000 * 60 * 60 });
   res.cookie('session', '123', { 'secure': true });
+  
+  // 转义参数
+  // const xss = encodeURIComponent(req.query.xss);
+
   res.render('index', {
     title: 'xss examle',
     xss: req.query.xss,
